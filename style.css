@@ -28,13 +28,25 @@ body{
   
 
 }
+#operator-3,
+#operator-7,
+#operator-11,
+#operator-15,
+#operator-18
 
-.operator-btn{
+{
     background-color: orange;
 }
 
-.operator-btn-2{
+#operator-0,
+#operator-1,
+#operator-2
+{
     background-color: gray;
+}
+
+#operator-16{
+    width: 210px;
 }
 
 button {
@@ -51,12 +63,21 @@ button:hover {
     background-color: lightgray;
 }
 
-.operator-btn:hover {
+.screen {
+    text-align:right;
+}
+#operator-3:hover,
+#operator-7:hover,
+#operator-11:hover,
+#operator-15:hover,
+#operator-18:hover {
     background-color: darkorange;
     color: wheat;
 }
 
-.operator-btn-2:hover {
+#operator-0:hover,
+#operator-1:hover,
+#operator-2:hover {
     background-color: rgb(68, 66, 66);
     color: wheat;
 }
@@ -65,3 +86,4 @@ button:hover {
     width: 210px;
    
 }
+
