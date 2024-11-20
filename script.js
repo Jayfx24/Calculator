@@ -21,26 +21,70 @@ const operators = [
   "=",
 ];
 
+let firstNum = "";
+let operator = null;
+let secondNum = "";
+const screen = document.createElement("div");
 
-
+regex = /^[0-9]$/;
 function getScreen() {
-  let screen = document.createElement("div");
   screen.className = "screen";
-  screen.textContent = '|';
+  screen.textContent = "";
   container.appendChild(screen);
 }
 function getButtons() {
-
-  operators.forEach((item,index) => {
+  operators.forEach((item, index) => {
     const newButton = document.createElement("button");
     newButton.id = `operator-${index}`;
-    newButton.classList.add('button')
+    newButton.classList.add("button");
     newButton.textContent = item;
+    // console.log(item)
 
+    newButton.addEventListener("click", getContent);
     container.appendChild(newButton);
+  });
+}
+function getContent(event) {
+  let value = event.target.textContent;
+  console.log(value);
 
-  })
-  
+  if (event.target.tagName === "BUTTON" && value === "AC") {
+    screen.textContent = "";
+    firstNum = "";
+    operator = null;
+    secondNum = "";
+
+    return;
+  } else if (["x", "/", "-", "+", "%"].includes(value)) {
+    operator = value;
+    screen.textContent = "";
+    return;
+  } else if (value === "=") {
+    // console.log(firstNum);
+    // console.log(operator);
+    // console.log(secondNum);
+    screen.textContent = operate(
+      parseFloat(firstNum),
+      parseFloat(secondNum),
+      operator
+    );
+    firstNum = ''
+    secondNum = ''
+    
+    firstNum = screen.textContent
+    return;
+  }
+
+  if (!operator && (value.match(regex) || value === ".")) {
+    firstNum += value;
+    screen.textContent = firstNum;
+    return;
+  } else if (operator && (value.match(regex) || value === ".")) {
+    secondNum += value;
+
+    screen.textContent = secondNum;
+    return;
+  }
 }
 
 function operate(numberOne, numberTwo, operator) {
@@ -51,11 +95,19 @@ function operate(numberOne, numberTwo, operator) {
       return numberOne - numberTwo;
     case "/":
       return numberOne / numberTwo;
-    case "*":
+    case "x":
       return numberOne * numberTwo;
+    case "%":
+      return (numberOne * 100) / numberTwo;
   }
 }
+
+
 getScreen();
 getButtons();
 
-console.log(operate(2, 5, "/"));
+/* round up,
+  fix number going beyond screen width,
+  fix C or change to +/-
+   
+*/
