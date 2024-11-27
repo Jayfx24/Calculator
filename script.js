@@ -91,6 +91,8 @@ function getContent(event) {
     )
     screen.textContent = equalValue
     firstNum = screen.textContent;
+    operator = null
+    secondNum = ""
     return;
   }
 
@@ -132,14 +134,10 @@ function getContent(event) {
 }
 function toggleSign(num) {
   if (!num){
-    num = "0";
+    num = "0"
   }
-  if (num.toString().includes("-")) {
-    num = parseFloat(num.replace("-", ""));
-  } else {
-    num = parseFloat("-" + num.toString());
-  }
-  screen.textContent = num;
+  num =  num * -1;
+  screen.textContent = num
   return num;
 }
 
