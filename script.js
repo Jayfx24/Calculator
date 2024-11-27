@@ -1,8 +1,8 @@
 const container = document.querySelector(".cal-buttons");
 const operators = [
   "AC",
-  "C",
-  "%",
+  "Del",
+  "+/-",
   "/",
   "7",
   "8",
@@ -20,11 +20,12 @@ const operators = [
   ".",
   "=",
 ];
-
 let firstNum = "";
 let operator = null;
 let secondNum = "";
 const screen = document.createElement("div");
+const operatorScreen = document.createElement("div");
+operatorScreen.id = "operator-screen";
 
 regex = /^[0-9]$/;
 function getScreen() {
@@ -32,6 +33,7 @@ function getScreen() {
   screen.textContent = "";
   container.appendChild(screen);
 }
+
 function getButtons() {
   operators.forEach((item, index) => {
     const newButton = document.createElement("button");
@@ -44,9 +46,9 @@ function getButtons() {
     container.appendChild(newButton);
   });
 }
+
 function getContent(event) {
   let value = event.target.textContent;
-  console.log(value);
 
   if (event.target.tagName === "BUTTON" && value === "AC") {
     screen.textContent = "";
@@ -55,36 +57,101 @@ function getContent(event) {
     secondNum = "";
 
     return;
-  } else if (["x", "/", "-", "+", "%"].includes(value)) {
+  } else if (value === "Del") {
+    if (secondNum) {
+      secondNum = delButton(secondNum)
+    } else if (firstNum) {
+      firstNum = delButton(firstNum)
+    }
+  } else if (value === "+/-") {
+    if (secondNum) {
+      secondNum = toggleSign(secondNum);
+    } else {
+      firstNum = toggleSign(firstNum);
+    }
+  } else if (["x", "/", "-", "+"].includes(value)) {
+    if (firstNum && secondNum && operator) {
+      // Calculate result of current operation
+      firstNum = roundToDecimalPlaces(
+        operate(parseFloat(firstNum), parseFloat(secondNum), operator),
+        5
+      )}
     operator = value;
+    operatorScreen.textContent = operator;
+  
     screen.textContent = "";
+    screen.appendChild(operatorScreen);
+    secondNum = ""
+
     return;
-  } else if (value === "=") {
-    // console.log(firstNum);
-    // console.log(operator);
-    // console.log(secondNum);
-    screen.textContent = operate(
-      parseFloat(firstNum),
-      parseFloat(secondNum),
-      operator
-    );
-    firstNum = ''
-    secondNum = ''
-    
-    firstNum = screen.textContent
+  } else if (firstNum && secondNum && value === "=") {
+    const equalValue = roundToDecimalPlaces(
+      operate(parseFloat(firstNum), parseFloat(secondNum), operator),
+      5
+    )
+    screen.textContent = equalValue
+    firstNum = screen.textContent;
     return;
   }
 
-  if (!operator && (value.match(regex) || value === ".")) {
+  if (firstNum.length > 13 || secondNum.length > 13) {
+    screen.textContent = "ERROR!!! Press any button to restart";
+    firstNum = "";
+    operator = null;
+    secondNum = "";
+
+    return;
+  }
+  screen.textContent = "";
+  if (screen.textContent.length >= 14) {
+    screen.textContent = roundToDecimalPlaces(Num);
+    return;
+  }
+
+  if (
+    !operator &&
+    (value.match(regex) || (value === "." && !firstNum.includes(".")))
+  ) {
     firstNum += value;
     screen.textContent = firstNum;
     return;
-  } else if (operator && (value.match(regex) || value === ".")) {
+  } else if (
+    operator &&
+    (value.match(regex) || (value === "." && !secondNum.includes(".")))
+  ) {
     secondNum += value;
-
     screen.textContent = secondNum;
     return;
   }
+  if (operator) {
+    screen.textContent = secondNum;
+  } else {
+    screen.textContent = firstNum;
+    // secondNum = 
+  }
+}
+function toggleSign(num) {
+  if (!num){
+    num = "0";
+  }
+  if (num.toString().includes("-")) {
+    num = parseFloat(num.replace("-", ""));
+  } else {
+    num = parseFloat("-" + num.toString());
+  }
+  screen.textContent = num;
+  return num;
+}
+
+function delButton(num) {
+  num = num.slice(0, -1);
+  screen.textContent = num;
+  return num ;
+}
+
+function roundToDecimalPlaces(num, decimalPlaces) {
+  const factor = Math.pow(10, decimalPlaces);
+  return Math.round(num * factor) / factor;
 }
 
 function operate(numberOne, numberTwo, operator) {
@@ -97,17 +164,15 @@ function operate(numberOne, numberTwo, operator) {
       return numberOne / numberTwo;
     case "x":
       return numberOne * numberTwo;
-    case "%":
-      return (numberOne * 100) / numberTwo;
+    case "+/-":
+      return;
   }
 }
 
-
 getScreen();
 getButtons();
-
 /* round up,
-  fix number going beyond screen width,
+  fix number going bey+ond screen width,
   fix C or change to +/-
    
 */

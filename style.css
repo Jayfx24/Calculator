@@ -19,6 +19,19 @@ body{
     margin-bottom: 15px;
     padding: 15px 5px 10px 10px ;
     background-color: darkgray;
+    font-size: 50px;
+    display: flex;
+    justify-content: right;
+    align-items: flex-end;
+    padding-bottom: 20px;
+}
+
+#operator-screen {
+    width: 50px;
+    height: 50px;
+    font-size: 30px;
+    align-self: flex-start;
+    margin-right: auto;
 }
 .cal-buttons {
     display: flex;
@@ -67,14 +80,7 @@ button:hover {
     background-color: lightgray;
 }
 
-.screen {
-    /* text-align:right; */
-    font-size: 50px;
-    display: flex;
-    justify-content: right;
-    align-items: flex-end;
-    padding-bottom: 20px;
-}
+
 #operator-3:hover,
 #operator-7:hover,
 #operator-11:hover,
